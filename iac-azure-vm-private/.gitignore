@@ -1,0 +1,16 @@
+# Terraform local artifacts
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+.terraform.lock.hcl
+
+# Local-only files (never commit secrets)
+terraform/*.auto.tfvars
+terraform/terraform.tfvars
+scripts/set-sp-env.ps1
+
+# Editors/OS
+.vscode/
+.DS_Store
+Thumbs.db
