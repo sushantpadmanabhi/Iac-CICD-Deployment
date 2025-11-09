@@ -1,3 +1,5 @@
 project_name = "iacdemo"
 env = "staging"
 location = "centralindia"
+subscription_id = "82b61061-64c5-4269-90e1-7e619219ef6e"
+ssh_pub_key_path = "C:/Users/admin/.ssh/az_staging_ed25519.pub"
