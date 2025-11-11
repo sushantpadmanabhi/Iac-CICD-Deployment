@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+
+    environment {
+        ARM_CLIENT_ID       = '4fe4bb29-7fd0-48fb-a863-d6e0ae379d39'          // from your SP JSON
+        ARM_TENANT_ID       = '85975428-4bda-404c-8358-950cdf0d0baf'
+        ARM_SUBSCRIPTION_ID = '82b61061-64c5-4269-90e1-7e619219ef6e'
+        ARM_CLIENT_SECRET   = credentials('AZURE_CLIENT_SECRET') // stored secret in Jenkins
+    }
+
+    parameters {
+        choice(name: 'ACTION', choices: ['plan', 'apply'], description: 'Terraform action to run')
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                git branch: 'main',
+                    url: 'https://github.com/sushantpadmanabhi/Iac-CICD-Deployment.git'
+            }
+        }
+
+        stage('Init') {
+            steps {
+                dir('iac-azure-vm-private/terraform/envs/staging') {
+                    bat 'terraform init -reconfigure'
+                }
+            }
+        }
+
+        stage('Validate') {
+            steps {
+                dir('iac-azure-vm-private/terraform/envs/staging') {
+                    bat 'terraform validate'
+                }
+            }
+        }
+
+        stage('Plan') {
+            when { expression { params.ACTION == 'plan' } }
+            steps {
+                dir('iac-azure-vm-private/terraform/envs/staging') {
+                bat 'terraform plan -var-file="staging.tfvars" -out="staging.tfplan"'
+                }
+            }
+        }
+
+        stage('Apply') {
+            when { expression { params.ACTION == 'apply' } }
+            steps {
+                input message: 'Approve apply?', ok: 'Proceed'
+                dir('iac-azure-vm-private/terraform/envs/staging') {
+                    bat 'terraform apply "staging.tfplan"'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline completed.'
+        }
+    }
+}
