@@ -26,7 +26,7 @@ pipeline {
 
     stage('Plan & Apply') {
       steps {
-        dir('iac-azure-vm-private/terraform/envs/staging') {
+        dir('iac-azure-vm-private/terraform/envs/dev') {
           bat 'terraform plan -var-file="dev.tfvars" -out="dev.tfplan"'
           bat 'terraform apply -auto-approve "dev.tfplan"'
         }
