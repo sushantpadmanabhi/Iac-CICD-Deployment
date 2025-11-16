@@ -17,7 +17,7 @@ pipeline {
 
     stage('Init & Validate') {
       steps {
-        dir('iac-azure-vm-private/terraform/envs/staging') {
+        dir('iac-azure-vm-private/terraform/envs/dev') {
           bat 'terraform init -reconfigure'
           bat 'terraform validate'
         }
@@ -27,8 +27,8 @@ pipeline {
     stage('Plan & Apply') {
       steps {
         dir('iac-azure-vm-private/terraform/envs/staging') {
-          bat 'terraform plan -var-file="staging.tfvars" -out="staging.tfplan"'
-          bat 'terraform apply -auto-approve "staging.tfplan"'
+          bat 'terraform plan -var-file="dev.tfvars" -out="dev.tfplan"'
+          bat 'terraform apply -auto-approve "dev.tfplan"'
         }
       }
     }
