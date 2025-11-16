@@ -1,6 +1,10 @@
 pipeline {
   agent any
 
+  parameters {
+    choice(name: 'ENV', choices: ['staging', 'dev'], description: 'Choose environment to deploy')
+}
+
   environment {
     ARM_CLIENT_ID       = '4fe4bb29-7fd0-48fb-a863-d6e0ae379d39'
     ARM_TENANT_ID       = '85975428-4bda-404c-8358-950cdf0d0baf'
